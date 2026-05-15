@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     if (!response.ok) return res.status(response.status).json({ error: data.error?.message || 'API 오류' });
 
     const raw = data.content.map(c => c.text || '').join('');
-    const parsed = JSON.parse(raw.replace(/```json|```/g, '').trim());
+    const cleaned = raw   .replace(/```json/g, '')   .replace(/```/g, '')   .trim();  const jsonStart = cleaned.indexOf('{'); const jsonEnd = cleaned.lastIndexOf('}');  if (jsonStart === -1 || jsonEnd === -1) {   throw new Error('AI가 JSON 형식으로 응답하지 않았습니다.'); }  const jsonText = cleaned.slice(jsonStart, jsonEnd + 1); const parsed = JSON.parse(jsonText);
     return res.status(200).json(parsed);
 
   } catch (err) {
