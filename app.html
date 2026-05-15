@@ -320,7 +320,7 @@ async function runAI() {
   const uphone = document.getElementById('uphone').value || '미입력';
 
   try {
-    const res = await fetch('https://funding-khaki.vercel.app/api/diagnose', {
+    const res = await fetch('https://funding-sunz.vercel.app/api/diagnose', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ q1:ans.q1||'', q2:ans.q2||'', q3:ans.q3||'', q4:ans.q4||'', q5:ans.q5||'' })
@@ -349,7 +349,7 @@ async function runAI() {
     document.getElementById('hdr-title').textContent = '진단 결과';
     show('s-result');
 
-    fetch('https://funding-khaki.vercel.app/api/save', {
+    fetch('https://funding-sunz.vercel.app/api/save', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
