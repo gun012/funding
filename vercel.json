@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/app", "destination": "/app.html" },
+    { "source": "/api/diagnose", "destination": "/api/diagnose.js" },
+    { "source": "/api/save", "destination": "/api/save.js" }
+  ]
+}
