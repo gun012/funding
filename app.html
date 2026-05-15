@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<title>정책자금 AI 자가진단 | 정책딱쌤</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+  background: #F3F4F6;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem;
+}
+.wrap { width: 100%; max-width: 460px; padding: 1rem 0 3rem; }
+.card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 16px rgba(0,0,0,0.09); }
+.hdr { background: #0D1A4A; padding: 1.1rem 1.4rem; }
+.hdr-sub { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 3px; }
+.hdr-title { font-size: 17px; font-weight: 700; color: #fff; }
+.body { padding: 1.4rem; }
+.prog { height: 4px; background: #E5E7EB; border-radius: 2px; margin-bottom: 1.3rem; }
+.prog-fill { height: 100%; background: #ECC038; border-radius: 2px; transition: width 0.4s ease; }
+.qlabel { font-size: 11px; color: #9CA3AF; margin-bottom: 5px; letter-spacing: 0.3px; }
+.qtext  { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 1rem; line-height: 1.55; }
+.opt {
+  width: 100%; text-align: left;
+  padding: 10px 14px; margin-bottom: 7px;
+  border: 1.5px solid #E5E7EB; border-radius: 10px;
+  background: #fff; color: #374151;
+  font-size: 13px; font-family: inherit;
+  cursor: pointer; transition: all 0.15s; display: block;
+}
+.opt:hover { background: #F9FAFB; border-color: #93C5FD; }
+.opt.sel   { background: #EFF6FF; border-color: #1E3A8A; color: #0D1A4A; font-weight: 700; }
+.nav { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+.btn-back { background: none; border: none; font-size: 13px; color: #9CA3AF; cursor: pointer; font-family: inherit; }
+.btn-next {
+  background: #0D1A4A; color: #fff; border: none;
+  padding: 10px 24px; border-radius: 10px;
+  font-size: 13px; font-weight: 700; font-family: inherit;
+  cursor: pointer; transition: opacity 0.15s;
+}
+.btn-next:disabled { opacity: 0.35; cursor: default; }
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid #E5E7EB; border-top-color: #ECC038;
+  border-radius: 50%; animation: spin 0.85s linear infinite;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.score-row { display: flex; align-items: center; gap: 1rem; padding: 1rem 0 1.25rem; border-bottom: 1.5px solid #F3F4F6; margin-bottom: 1rem; }
+.score-circle {
+  width: 70px; height: 70px; border-radius: 50%;
+  background: #EFF6FF; border: 2.5px solid #1E3A8A;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.score-num { font-size: 24px; font-weight: 800; color: #0D1A4A; line-height: 1; }
+.score-pt  { font-size: 10px; color: #1E3A8A; font-weight: 700; margin-top: 2px; }
+.score-info h3 { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 4px; }
+.score-info p  { font-size: 12px; color: #6B7280; line-height: 1.5; }
+.sec-title { font-size: 11px; font-weight: 700; color: #9CA3AF; letter-spacing: 0.7px; text-transform: uppercase; margin: 0 0 0.6rem; }
+.ai-text { font-size: 13px; color: #374151; line-height: 1.8; background: #FAFAFA; border-left: 3px solid #ECC038; border-radius: 0 8px 8px 0; padding: 11px 14px; margin-bottom: 1rem; white-space: pre-wrap; }
+.fund-item { border: 1.5px solid #F3F4F6; border-radius: 10px; padding: 10px 13px; margin-bottom: 7px; }
+.fund-top  { display: flex; justify-content: space-between; align-items: flex-start; }
+.fund-name { font-size: 13px; font-weight: 700; color: #111827; flex: 1; margin-right: 8px; }
+.fund-pct  { font-size: 11px; font-weight: 700; background: #EFF6FF; color: #0D1A4A; padding: 2px 9px; border-radius: 10px; white-space: nowrap; }
+.fund-detail { font-size: 12px; color: #6B7280; margin-top: 4px; line-height: 1.5; }
+.chk-item { display: flex; gap: 9px; align-items: flex-start; font-size: 13px; color: #374151; padding: 6px 0; border-bottom: 1px solid #F9FAFB; line-height: 1.55; }
+.chk-dot  { width: 7px; height: 7px; border-radius: 50%; background: #1E3A8A; margin-top: 5px; flex-shrink: 0; }
+.input-f { width: 100%; padding: 10px 13px; border: 1.5px solid #E5E7EB; border-radius: 10px; font-size: 13px; background: #fff; color: #111827; margin-bottom: 8px; font-family: inherit; transition: border-color 0.15s; }
+.input-f:focus { outline: none; border-color: #1E3A8A; }
+.contact-wrap { margin-top: 1.3rem; border-top: 1.5px solid #F3F4F6; padding-top: 1.3rem; }
+.contact-label { font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 0.8rem; }
+.kakao-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 13px 15px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; margin-bottom: 8px; background: #FEE500; color: #3C1E1E; text-decoration: none; font-family: inherit; transition: opacity 0.15s; }
+.kakao-btn:hover { opacity: 0.9; }
+.phone-btn { display: flex; align-items: center; gap: 10px; width: 100%; padding: 13px 15px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; margin-bottom: 8px; background: #0D1A4A; color: #fff; text-decoration: none; font-family: inherit; transition: opacity 0.15s; }
+.phone-btn:hover { opacity: 0.9; }
+.db-saved { display: flex; align-items: center; gap: 6px; justify-content: center; font-size: 11px; color: #9CA3AF; margin-top: 8px; }
+.db-dot { width: 7px; height: 7px; border-radius: 50%; background: #22C55E; animation: pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+.tag-wrap { display: flex; flex-wrap: wrap; gap: 5px; margin: 0.75rem 0 1rem; justify-content: center; }
+.tag { font-size: 11px; padding: 3px 10px; border-radius: 10px; background: #F3F4F6; color: #6B7280; border: 1px solid #E5E7EB; }
+.err-box { background: #FEF2F2; border: 1.5px solid #FECACA; border-radius: 10px; padding: 11px 14px; font-size: 13px; color: #DC2626; margin-bottom: 1rem; line-height: 1.6; }
+.footer { text-align: center; margin-top: 12px; font-size: 11px; color: #9CA3AF; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="card">
+  <div class="hdr">
+    <div class="hdr-sub">정책딱쌤 · 지엔파트너스</div>
+    <div class="hdr-title" id="hdr-title">정책자금 AI 자가진단</div>
+  </div>
+  <div class="body">
+
+    <!-- 화면 0: 인트로 -->
+    <div id="s0" style="padding:0;margin:-1.4rem -1.4rem 0;">
+      <div style="background:linear-gradient(160deg,#0F2345 0%,#1a3560 45%,#284673 100%);padding:2rem 1.5rem 1.75rem;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.06);"></div>
+        <div style="position:absolute;top:-15px;right:-15px;width:100px;height:100px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.08);"></div>
+        <div style="position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;border-radius:50%;border:1.5px solid rgba(236,192,56,0.12);"></div>
+        <div style="text-align:center;margin-bottom:0.9rem;">
+          <span style="display:inline-flex;align-items:center;gap:5px;background:rgba(236,192,56,0.12);border:1px solid rgba(236,192,56,0.4);color:#ECC038;font-size:11px;font-weight:700;padding:4px 14px;border-radius:20px;letter-spacing:0.8px;">
+            <span style="width:5px;height:5px;border-radius:50%;background:#ECC038;flex-shrink:0;"></span>
+            대한민국 중소기업·소상공인 정책자금 AI 매칭
+            <span style="width:5px;height:5px;border-radius:50%;background:#ECC038;flex-shrink:0;"></span>
+          </span>
+        </div>
+        <div style="text-align:center;margin-bottom:1rem;">
+          <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(55,48,18,0.9);border:1px solid rgba(236,192,56,0.5);color:#ECC038;font-size:12px;font-weight:700;padding:6px 18px;border-radius:20px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3" stroke="#ECC038" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            정부 공식 정책자금
+          </span>
+        </div>
+        <div style="text-align:center;margin-bottom:1rem;">
+          <div style="width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#1A3460,#2A5298);border:2px solid rgba(255,255,255,0.2);margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:42px;box-shadow:0 2px 16px rgba(0,0,0,0.35);">₩</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:30px;font-weight:900;color:#fff;line-height:1.2;letter-spacing:-1px;">나에게 맞는</div>
+          <div style="font-size:30px;font-weight:900;line-height:1.2;margin-bottom:14px;letter-spacing:-1px;">
+            <span style="color:#ECC038;text-shadow:0 0 20px rgba(236,192,56,0.45);">정책자금</span><span style="color:#fff;"> 가이드</span>
+          </div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.72);line-height:1.75;">간단 입력으로 AI가<br>최적 정부지원 자금을 무료 분석</div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:8px;margin-top:1.1rem;flex-wrap:wrap;">
+          <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.9);font-size:11px;padding:5px 11px;border-radius:20px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>AI 맞춤 분석
+          </span>
+          <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.9);font-size:11px;padding:5px 11px;border-radius:20px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" stroke="#F87171" stroke-width="2" fill="#F87171"/></svg>완전 무료
+          </span>
+          <span style="display:inline-flex;align-items:center;gap:4px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.9);font-size:11px;padding:5px 11px;border-radius:20px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>정보 보호
+          </span>
+        </div>
+      </div>
+      <div style="padding:1.25rem 1.4rem 1.4rem;">
+        <div style="font-size:11px;font-weight:700;color:#9CA3AF;letter-spacing:0.5px;margin-bottom:8px;text-transform:uppercase;">매칭 가능 정책자금</div>
+        <div class="tag-wrap" style="margin:0 0 1.25rem;">
+          <span class="tag">소진공 직접대출</span><span class="tag">청년창업사관학교</span><span class="tag">스마트공장</span>
+          <span class="tag">지역특화보조금</span><span class="tag">고용촉진장려금</span><span class="tag">기보·신보 보증</span>
+        </div>
+        <button onclick="go(1)" style="width:100%;padding:14px;font-size:15px;font-weight:800;border:none;border-radius:12px;cursor:pointer;background:linear-gradient(135deg,#0F2345,#1a3560);color:#fff;letter-spacing:0.3px;box-shadow:0 4px 14px rgba(13,26,74,0.35);">
+          무료 AI 진단 시작하기
+        </button>
+        <div style="display:flex;justify-content:center;gap:16px;margin-top:10px;">
+          <span style="font-size:11px;color:#9CA3AF;">소요시간 3분</span>
+          <span style="font-size:11px;color:#D1D5DB;">|</span>
+          <span style="font-size:11px;color:#9CA3AF;">즉시 결과 제공</span>
+          <span style="font-size:11px;color:#D1D5DB;">|</span>
+          <span style="font-size:11px;color:#9CA3AF;">개인정보 선택</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 화면 1 -->
+    <div id="s1" style="display:none;">
+      <div class="prog"><div class="prog-fill" style="width:20%"></div></div>
+      <div class="qlabel">질문 1 / 5</div>
+      <div class="qtext">어떤 업종으로 운영 중이세요?</div>
+      <button class="opt" onclick="pick(this,'제조업 (생산/가공/조립)')">제조업 (생산/가공/조립)</button>
+      <button class="opt" onclick="pick(this,'도소매 / 유통')">도소매 / 유통</button>
+      <button class="opt" onclick="pick(this,'음식업 / 카페 / 프랜차이즈')">음식업 / 카페 / 프랜차이즈</button>
+      <button class="opt" onclick="pick(this,'서비스업 (교육/뷰티/물류 등)')">서비스업 (교육/뷰티/물류 등)</button>
+      <button class="opt" onclick="pick(this,'IT / 플랫폼 / 스타트업')">IT / 플랫폼 / 스타트업</button>
+      <div class="nav"><button class="btn-back" onclick="go(0)">← 이전</button><button class="btn-next" id="n1" disabled onclick="go(2)">다음 →</button></div>
+    </div>
+
+    <!-- 화면 2 -->
+    <div id="s2" style="display:none;">
+      <div class="prog"><div class="prog-fill" style="width:40%"></div></div>
+      <div class="qlabel">질문 2 / 5</div>
+      <div class="qtext">사업 설립 후 몇 년이 됐나요?</div>
+      <button class="opt" onclick="pick(this,'예비창업자 (미설립)')">예비창업자 (아직 미설립)</button>
+      <button class="opt" onclick="pick(this,'1년 미만')">1년 미만</button>
+      <button class="opt" onclick="pick(this,'1년 이상 ~ 3년 미만')">1년 이상 ~ 3년 미만</button>
+      <button class="opt" onclick="pick(this,'3년 이상 ~ 7년 미만')">3년 이상 ~ 7년 미만</button>
+      <button class="opt" onclick="pick(this,'7년 이상')">7년 이상</button>
+      <div class="nav"><button class="btn-back" onclick="go(1)">← 이전</button><button class="btn-next" id="n2" disabled onclick="go(3)">다음 →</button></div>
+    </div>
+
+    <!-- 화면 3 -->
+    <div id="s3" style="display:none;">
+      <div class="prog"><div class="prog-fill" style="width:60%"></div></div>
+      <div class="qlabel">질문 3 / 5</div>
+      <div class="qtext">연 매출 규모는 어느 정도예요?</div>
+      <button class="opt" onclick="pick(this,'매출 없음 (예비/초기)')">매출 없음 (예비/초기)</button>
+      <button class="opt" onclick="pick(this,'1억 원 미만')">1억 원 미만</button>
+      <button class="opt" onclick="pick(this,'1억 ~ 5억 원')">1억 ~ 5억 원</button>
+      <button class="opt" onclick="pick(this,'5억 ~ 30억 원')">5억 ~ 30억 원</button>
+      <button class="opt" onclick="pick(this,'30억 원 이상')">30억 원 이상</button>
+      <div class="nav"><button class="btn-back" onclick="go(2)">← 이전</button><button class="btn-next" id="n3" disabled onclick="go(4)">다음 →</button></div>
+    </div>
+
+    <!-- 화면 4 -->
+    <div id="s4" style="display:none;">
+      <div class="prog"><div class="prog-fill" style="width:80%"></div></div>
+      <div class="qlabel">질문 4 / 5</div>
+      <div class="qtext">어떤 목적으로 자금이 필요해요?</div>
+      <button class="opt" onclick="pick(this,'창업 초기 운영자금')">창업 초기 운영자금</button>
+      <button class="opt" onclick="pick(this,'설비 / 장비 구입')">설비 / 장비 구입</button>
+      <button class="opt" onclick="pick(this,'고용 및 인건비 지원')">고용 및 인건비 지원</button>
+      <button class="opt" onclick="pick(this,'R&D / 기술개발')">R&D / 기술개발</button>
+      <button class="opt" onclick="pick(this,'운영자금 부족 (기존 사업)')">운영자금 부족 (기존 사업)</button>
+      <div class="nav"><button class="btn-back" onclick="go(3)">← 이전</button><button class="btn-next" id="n4" disabled onclick="go(5)">다음 →</button></div>
+    </div>
+
+    <!-- 화면 5 -->
+    <div id="s5" style="display:none;">
+      <div class="prog"><div class="prog-fill" style="width:95%"></div></div>
+      <div class="qlabel">질문 5 / 5</div>
+      <div class="qtext">신용/재무 상태는 어떤가요?</div>
+      <button class="opt" onclick="pick(this,'신용 양호, 세금 체납 없음')">신용 양호, 세금 체납 없음</button>
+      <button class="opt" onclick="pick(this,'신용 보통, 일부 연체 이력')">신용 보통, 일부 연체 이력</button>
+      <button class="opt" onclick="pick(this,'신용 불량 또는 체납 있음')">신용 불량 또는 체납 있음</button>
+      <button class="opt" onclick="pick(this,'잘 모르겠음')">잘 모르겠음</button>
+      <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid #F3F4F6;">
+        <div style="font-size:12px;color:#9CA3AF;margin-bottom:8px;">결과를 더 정확하게 받으려면 (선택)</div>
+        <input class="input-f" type="text" id="uname"  placeholder="대표자 성함 (선택)"/>
+        <input class="input-f" type="tel"  id="uphone" placeholder="연락처 — 010-XXXX-XXXX (선택)"/>
+      </div>
+      <div class="nav"><button class="btn-back" onclick="go(4)">← 이전</button><button class="btn-next" id="n5" disabled onclick="runAI()">AI 분석 시작 →</button></div>
+    </div>
+
+    <!-- 로딩 -->
+    <div id="s-loading" style="display:none;">
+      <div style="text-align:center;padding:2.5rem 1rem;">
+        <div class="spinner"></div>
+        <div style="font-size:14px;font-weight:700;color:#111827;margin-bottom:6px;" id="load-msg">AI가 정책자금 DB를 분석 중...</div>
+        <div style="font-size:12px;color:#6B7280;line-height:1.7;">입력하신 정보를 바탕으로<br>최적 자금을 매칭하고 있어요</div>
+      </div>
+    </div>
+
+    <!-- 결과 -->
+    <div id="s-result" style="display:none;">
+      <div class="score-row">
+        <div class="score-circle"><div class="score-num" id="r-score">—</div><div class="score-pt">점</div></div>
+        <div class="score-info"><h3 id="r-grade">분석 완료</h3><p id="r-sub">AI 분석 결과입니다</p></div>
+      </div>
+      <div class="sec-title">AI 종합 분석</div>
+      <div class="ai-text" id="r-analysis"></div>
+      <div class="sec-title">매칭 정책자금</div>
+      <div id="r-funds"></div>
+      <div class="sec-title" style="margin-top:1rem;">필수 서류 체크리스트</div>
+      <div id="r-checklist"></div>
+      <div class="contact-wrap">
+        <div class="contact-label">신청 절차가 복잡하다면? 전문가와 바로 연결하세요</div>
+        <a class="kakao-btn" href="https://open.kakao.com/o/spAltqni" target="_blank">
+          <svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.69 2 11.27c0 2.87 1.76 5.4 4.43 6.94l-1.1 3.98 4.56-2.95c.69.1 1.39.15 2.11.15 5.52 0 10-3.69 10-8.12S17.52 3 12 3z" fill="#3C1E1E"/></svg>
+          1:1 카카오 오픈채팅 바로 상담
+        </a>
+        <a class="phone-btn" href="tel:18442436">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" fill="white"/></svg>
+          대표번호 1844-2436 전화 연결
+        </a>
+        <div class="db-saved"><div class="db-dot"></div><span id="db-status-text">진단 결과가 상담 DB에 저장되었어요</span></div>
+      </div>
+      <div style="text-align:center;margin-top:1.2rem;">
+        <button class="btn-back" onclick="resetAll()">처음부터 다시 진단하기</button>
+      </div>
+    </div>
+
+    <!-- 에러 -->
+    <div id="s-err" style="display:none;">
+      <div class="err-box" id="err-msg">오류가 발생했습니다.</div>
+      <button class="btn-next" onclick="go(0)" style="width:100%;">다시 시도하기</button>
+    </div>
+
+  </div>
+</div>
+<div class="footer">지엔파트너스 · 정책딱쌤 · 대구/경북 기반 전국 서비스</div>
+</div>
+
+<script>
+const ans = {};
+const LOAD_MSGS = ['AI가 정책자금 DB를 분석 중...','업종별 지원 조건 매칭 중...','서류 체크리스트 생성 중...','맞춤 결과 정리 중...'];
+
+function show(id) {
+  ['s0','s1','s2','s3','s4','s5','s-loading','s-result','s-err'].forEach(s => {
+    const el = document.getElementById(s);
+    if (el) el.style.display = 'none';
+  });
+  const t = document.getElementById(id);
+  if (t) t.style.display = 'block';
+}
+
+function go(n) {
+  show('s'+n);
+  const titles = ['정책자금 AI 자가진단','업종 선택','설립 연도','매출 규모','자금 목적','신용 상태'];
+  document.getElementById('hdr-title').textContent = titles[n] || '정책자금 AI 자가진단';
+  window.scrollTo(0,0);
+}
+
+function pick(btn, val) {
+  const sc = btn.closest('[id^="s"]');
+  sc.querySelectorAll('.opt').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  const idx = sc.id.replace('s','');
+  ans['q'+idx] = val;
+  const nb = document.getElementById('n'+idx);
+  if (nb) nb.disabled = false;
+}
+
+async function runAI() {
+  show('s-loading');
+  document.getElementById('hdr-title').textContent = 'AI 분석 중';
+  let li = 0;
+  const iv = setInterval(() => {
+    li = (li+1) % LOAD_MSGS.length;
+    const el = document.getElementById('load-msg');
+    if (el) el.textContent = LOAD_MSGS[li];
+  }, 1500);
+
+  const uname  = document.getElementById('uname').value  || '미입력';
+  const uphone = document.getElementById('uphone').value || '미입력';
+
+  try {
+    const res = await fetch('/api/diagnose', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q1:ans.q1||'', q2:ans.q2||'', q3:ans.q3||'', q4:ans.q4||'', q5:ans.q5||'' })
+    });
+    clearInterval(iv);
+    if (!res.ok) { const err = await res.json(); throw new Error(err.error||'API 오류'); }
+    const p = await res.json();
+
+    document.getElementById('r-score').textContent = Math.round(p.score);
+    document.getElementById('r-grade').textContent = p.grade || '분석 완료';
+    document.getElementById('r-sub').textContent   = (p.funds||[]).length + '개 자금 매칭됨';
+    document.getElementById('r-analysis').textContent = p.summary || '';
+
+    const fe = document.getElementById('r-funds');
+    fe.innerHTML = '';
+    (p.funds||[]).forEach(f => {
+      fe.innerHTML += '<div class="fund-item"><div class="fund-top"><div class="fund-name">'+f.name+'</div><div class="fund-pct">매칭 '+Math.round(f.match)+'%</div></div><div class="fund-detail">'+f.amount+' · '+f.reason+'</div></div>';
+    });
+
+    const ce = document.getElementById('r-checklist');
+    ce.innerHTML = '';
+    (p.checklist||[]).forEach(c => {
+      ce.innerHTML += '<div class="chk-item"><div class="chk-dot"></div><span>'+c+'</span></div>';
+    });
+
+    document.getElementById('hdr-title').textContent = '진단 결과';
+    show('s-result');
+
+    fetch('/api/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name:uname, phone:uphone,
+        q1:ans.q1||'', q2:ans.q2||'', q3:ans.q3||'', q4:ans.q4||'', q5:ans.q5||'',
+        score:Math.round(p.score), grade:p.grade||'',
+        fund1:(p.funds[0]||{}).name||'', fund2:(p.funds[1]||{}).name||'', fund3:(p.funds[2]||{}).name||''
+      })
+    }).then(r=>r.json()).then(r=>{
+      const el = document.getElementById('db-status-text');
+      if (el) el.textContent = r.status==='ok' ? '진단 결과가 상담 DB에 저장되었어요' : '카카오 또는 전화로 상담 신청해주세요';
+    }).catch(()=>{
+      const el = document.getElementById('db-status-text');
+      if (el) el.textContent = '카카오 또는 전화로 상담 신청해주세요';
+    });
+
+  } catch(e) {
+    clearInterval(iv);
+    document.getElementById('err-msg').textContent = 'AI 분석 오류: ' + e.message;
+    show('s-err');
+  }
+}
+
+function resetAll() {
+  Object.keys(ans).forEach(k => delete ans[k]);
+  document.getElementById('uname').value = '';
+  document.getElementById('uphone').value = '';
+  go(0);
+}
+</script>
+</body>
+</html>
