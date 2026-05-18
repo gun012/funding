@@ -1,230 +1,25 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<meta name="theme-color" content="#1E3A6B"/>
-<title>정책자금 가이드 | AI 맞춤 분석</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<!-- PWA -->
-<link rel="manifest" href="manifest.json"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<meta name="apple-mobile-web-app-title" content="정책자금"/>
-<link rel="apple-touch-icon" href="icons/icon-152.png"/>
-<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png"/>
-<meta name="msapplication-TileImage" content="icons/icon-144.png"/>
-<meta name="msapplication-TileColor" content="#1E3A6B"/>
+  <title>정책자금 AI 무료진단</title>
+  <meta name="description" content="내 사업에 맞는 정책자금 가능성을 AI로 30초 만에 무료 진단하세요." />
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{
-  width:100%;height:100%;
-  overflow:hidden;
-  background:#1E3A6B;
-  font-family:"Noto Sans KR",sans-serif;
-  -webkit-text-size-adjust:100%;
-}
+  <!-- 카카오/문자 공유 썸네일 기본 설정 -->
+  <meta property="og:title" content="정책자금 AI 무료진단" />
+  <meta property="og:description" content="최대 3억 정책자금 가능성, AI로 30초 무료 분석" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://funding-sunz.vercel.app" />
+  <meta property="og:image" content="https://funding-sunz.vercel.app/icon-192.png" />
 
-/* ── 설치 배너 ── */
-#install-banner{
-  display:none;
-  align-items:center;
-  justify-content:space-between;
-  background:#1A3460;
-  padding:10px 14px;
-  gap:10px;
-  border-bottom:2px solid #F59E0B;
-  position:fixed;top:0;left:0;right:0;
-  z-index:9999;
-}
-.ib-left{display:flex;align-items:center;gap:10px;}
-.ib-icon{width:36px;height:36px;border-radius:9px;object-fit:cover;}
-.ib-title{font-size:13px;font-weight:700;color:#fff;}
-.ib-desc{font-size:11px;color:rgba(255,255,255,0.6);}
-.ib-btn{
-  background:#F59E0B;color:#1E3A6B;
-  border:none;border-radius:8px;
-  padding:8px 16px;font-size:13px;font-weight:800;
-  cursor:pointer;white-space:nowrap;flex-shrink:0;
-}
-
-/* ── 로딩 화면 ── */
-#splash{
-  position:fixed;inset:0;
-  background:linear-gradient(160deg,#0A1628 0%,#1E3A6B 100%);
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  z-index:1000;
-  transition:opacity 0.5s;
-}
-.sp-icon{
-  width:80px;height:80px;border-radius:50%;
-  background:linear-gradient(135deg,#1A3460,#2A5298);
-  border:2px solid #F59E0B;
-  display:flex;align-items:center;justify-content:center;
-  font-size:38px;
-  box-shadow:0 0 0 8px rgba(245,158,11,0.1), 0 8px 28px rgba(0,0,0,0.4);
-  margin-bottom:20px;
-  animation:pulse 2s ease-in-out infinite;
-}
-@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}
-.sp-title{
-  font-size:22px;font-weight:800;color:#fff;
-  margin-bottom:6px;letter-spacing:0.5px;
-}
-.sp-title span{color:#F59E0B;}
-.sp-sub{font-size:13px;color:rgba(255,255,255,0.55);margin-bottom:32px;}
-.sp-bar{
-  width:180px;height:3px;
-  background:rgba(255,255,255,0.1);
-  border-radius:2px;overflow:hidden;
-}
-.sp-bar-inner{
-  height:100%;background:linear-gradient(90deg,#F59E0B,#FCD34D);
-  border-radius:2px;
-  animation:loading 1.8s ease-in-out forwards;
-}
-@keyframes loading{0%{width:0%;}100%{width:100%;}}
-
-/* ── 메인 컨테이너 ── */
-#app-container{
-  position:fixed;inset:0;
-  display:flex;flex-direction:column;
-  padding-top:0;
-}
-#app-container.with-banner{padding-top:58px;}
-
-/* ── iframe ── */
-#app-frame{
-  flex:1;
-  border:none;
-  width:100%;
-  height:100%;
-  background:#fff;
-}
-
-/* ── 오프라인 안내 ── */
-#offline{
-  display:none;
-  position:fixed;inset:0;
-  background:linear-gradient(160deg,#0A1628,#1E3A6B);
-  flex-direction:column;
-  align-items:center;justify-content:center;
-  text-align:center;padding:40px;
-  z-index:500;
-}
-.off-ico{font-size:60px;margin-bottom:16px;}
-.off-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:8px;}
-.off-desc{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.7;margin-bottom:28px;}
-.off-btn{
-  background:#F59E0B;color:#1E3A6B;
-  border:none;border-radius:10px;
-  padding:14px 28px;font-size:16px;font-weight:800;
-  cursor:pointer;
-}
-</style>
+  <script>
+    window.location.replace("/app.html");
+  </script>
 </head>
 <body>
-
-<!-- 설치 배너 -->
-<div id="install-banner">
-  <div class="ib-left">
-    <img src="icons/icon-72.png" class="ib-icon" alt="icon"/>
-    <div>
-      <div class="ib-title">정책자금 가이드</div>
-      <div class="ib-desc">홈화면에 추가하면 앱처럼 사용!</div>
-    </div>
-  </div>
-  <button class="ib-btn" onclick="installApp()">설치하기</button>
-</div>
-
-<!-- 로딩 스플래시 -->
-<div id="splash">
-  <div class="sp-icon">₩</div>
-  <div class="sp-title">정책자금 <span>가이드</span></div>
-  <div class="sp-sub">AI가 분석하는 맞춤 정책자금</div>
-  <div class="sp-bar"><div class="sp-bar-inner"></div></div>
-</div>
-
-<!-- 앱 컨테이너 -->
-<div id="app-container">
-  <iframe
-  id="app-frame"
-  src="https://funding-sunz.vercel.app/app.html"
-  allowfullscreen
-  allow="geolocation"
-  title="정책자금 가이드 앱">
-</iframe>
-</div>
-
-<!-- 오프라인 안내 -->
-<div id="offline">
-  <div class="off-ico">📡</div>
-  <div class="off-title">인터넷 연결이 필요합니다</div>
-  <div class="off-desc">정책자금 AI 분석을 위해<br/>인터넷 연결이 필요합니다.<br/>연결 후 다시 시도해 주세요.</div>
-  <button class="off-btn" onclick="location.reload()">🔄 다시 시도</button>
-</div>
-
-<script>
-// ── 스플래시 제거 ──
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    const s = document.getElementById("splash");
-    s.style.opacity = "0";
-    setTimeout(() => s.style.display = "none", 500);
-  }, 2000);
-});
-
-// ── 오프라인 감지 ──
-function checkOnline() {
-  const off = document.getElementById("offline");
-  if (!navigator.onLine) {
-    off.style.display = "flex";
-  } else {
-    off.style.display = "none";
-  }
-}
-window.addEventListener("online", checkOnline);
-window.addEventListener("offline", checkOnline);
-checkOnline();
-
-// ── PWA 설치 ──
-let deferredPrompt;
-window.addEventListener("beforeinstallprompt", e => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const banner = document.getElementById("install-banner");
-  banner.style.display = "flex";
-  document.getElementById("app-container").classList.add("with-banner");
-});
-
-function installApp() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(r => {
-    if (r.outcome === "accepted") {
-      document.getElementById("install-banner").style.display = "none";
-      document.getElementById("app-container").classList.remove("with-banner");
-    }
-    deferredPrompt = null;
-  });
-}
-
-window.addEventListener("appinstalled", () => {
-  document.getElementById("install-banner").style.display = "none";
-  document.getElementById("app-container").classList.remove("with-banner");
-});
-
-// ── 서비스 워커 등록 ──
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("sw.js")
-      .then(r => console.log("✅ SW 등록:", r.scope))
-      .catch(e => console.log("SW 오류:", e));
-  });
-}
-</script>
+  <p>정책자금 AI 진단 페이지로 이동 중입니다...</p>
+  <p><a href="/app.html">바로가기</a></p>
 </body>
 </html>
