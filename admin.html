@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>정책자금 관리자</title>
 
   <style>
@@ -15,7 +16,62 @@
       padding:30px;
     }
 
-    .wrap { max-width:1200px; margin:auto; }
+    .login-wrap {
+      min-height:90vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .login-box {
+      width:100%;
+      max-width:420px;
+      background:white;
+      border-radius:28px;
+      padding:34px;
+      box-shadow:0 18px 45px rgba(0,0,0,0.08);
+    }
+
+    .login-box h1 {
+      font-size:30px;
+      margin-bottom:10px;
+    }
+
+    .login-box p {
+      color:#666;
+      margin-bottom:24px;
+      line-height:1.5;
+    }
+
+    .login-input {
+      width:100%;
+      padding:16px;
+      border:1px solid #ddd;
+      border-radius:16px;
+      font-size:16px;
+      margin-bottom:14px;
+    }
+
+    .login-btn {
+      width:100%;
+      background:#111827;
+      color:white;
+      border:none;
+      padding:16px;
+      border-radius:16px;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .error {
+      margin-top:14px;
+      color:#dc2626;
+      font-size:14px;
+      display:none;
+    }
+
+    .wrap { max-width:1200px; margin:auto; display:none; }
 
     .top {
       display:flex;
@@ -27,15 +83,28 @@
     h1 { font-size:38px; margin-bottom:10px; }
     .sub { color:#666; }
 
-    .reload {
-      background:#111827;
-      color:white;
+    .top-buttons {
+      display:flex;
+      gap:10px;
+    }
+
+    .reload, .logout {
       border:none;
       padding:14px 22px;
       border-radius:16px;
       cursor:pointer;
       font-weight:bold;
       font-size:15px;
+    }
+
+    .reload {
+      background:#111827;
+      color:white;
+    }
+
+    .logout {
+      background:#e5e7eb;
+      color:#333;
     }
 
     .cards {
@@ -108,14 +177,41 @@
     }
 
     @media(max-width:600px){
+      body { padding:18px; }
       .cards { grid-template-columns:1fr; }
       .top { flex-direction:column; align-items:flex-start; gap:20px; }
+      .top-buttons { width:100%; }
+      .reload, .logout { flex:1; }
+      table { min-width:720px; }
+      .panel { overflow-x:auto; }
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
+
+  <div class="login-wrap" id="loginWrap">
+    <div class="login-box">
+      <h1>관리자 로그인</h1>
+      <p>정책자금 CRM 고객정보 보호를 위해 비밀번호를 입력하세요.</p>
+
+      <input
+        type="password"
+        id="passwordInput"
+        class="login-input"
+        placeholder="관리자 비밀번호"
+        onkeydown="if(event.key === 'Enter') login()"
+      />
+
+      <button class="login-btn" onclick="login()">접속하기</button>
+
+      <div class="error" id="loginError">
+        비밀번호가 올바르지 않습니다.
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap" id="dashboardWrap">
 
     <div class="top">
       <div>
@@ -123,7 +219,10 @@
         <div class="sub">최근 고객 · 고확률 고객 · 중복 신청 관리</div>
       </div>
 
-      <button class="reload" onclick="loadData()">새로고침</button>
+      <div class="top-buttons">
+        <button class="reload" onclick="loadData()">새로고침</button>
+        <button class="logout" onclick="logout()">로그아웃</button>
+      </div>
     </div>
 
     <div class="cards">
@@ -176,6 +275,51 @@
   </div>
 
   <script>
+    let adminPassword = localStorage.getItem('ADMIN_PASSWORD') || '';
+
+    function showLogin() {
+      document.getElementById('loginWrap').style.display = 'flex';
+      document.getElementById('dashboardWrap').style.display = 'none';
+    }
+
+    function showDashboard() {
+      document.getElementById('loginWrap').style.display = 'none';
+      document.getElementById('dashboardWrap').style.display = 'block';
+    }
+
+    async function login() {
+      const input = document.getElementById('passwordInput');
+      const error = document.getElementById('loginError');
+
+      adminPassword = input.value.trim();
+
+      if (!adminPassword) {
+        error.innerText = '비밀번호를 입력하세요.';
+        error.style.display = 'block';
+        return;
+      }
+
+      localStorage.setItem('ADMIN_PASSWORD', adminPassword);
+
+      const ok = await loadData();
+
+      if (ok) {
+        error.style.display = 'none';
+        showDashboard();
+      } else {
+        localStorage.removeItem('ADMIN_PASSWORD');
+        error.innerText = '비밀번호가 올바르지 않거나 데이터를 불러올 수 없습니다.';
+        error.style.display = 'block';
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem('ADMIN_PASSWORD');
+      adminPassword = '';
+      document.getElementById('passwordInput').value = '';
+      showLogin();
+    }
+
     function setText(id, value) {
       const el = document.getElementById(id);
       if (el) el.innerText = value;
@@ -183,8 +327,19 @@
 
     async function loadData() {
       try {
-        const res = await fetch('/api/dashboard?time=' + Date.now());
-        const data = await res.json();
+        const password =
+          encodeURIComponent(adminPassword || localStorage.getItem('ADMIN_PASSWORD') || '');
+
+        const res =
+          await fetch('/api/dashboard?password=' + password + '&time=' + Date.now());
+
+        const data =
+          await res.json();
+
+        if (!res.ok) {
+          console.error('dashboard error:', data);
+          return false;
+        }
 
         const list =
           data.customers ||
@@ -198,7 +353,7 @@
         setText('duplicate', data.duplicate || 0);
 
         const tbody = document.getElementById('tbody');
-        if (!tbody) return;
+        if (!tbody) return true;
 
         tbody.innerHTML = '';
 
@@ -210,7 +365,7 @@
               </td>
             </tr>
           `;
-          return;
+          return true;
         }
 
         list.forEach(item => {
@@ -240,9 +395,11 @@
           `;
         });
 
+        return true;
+
       } catch (err) {
         console.error(err);
-        alert('대시보드 로딩 실패: ' + err.message);
+        return false;
       }
     }
 
@@ -257,7 +414,23 @@
       }
     }
 
-    loadData();
+    async function init() {
+      if (adminPassword) {
+        const ok = await loadData();
+
+        if (ok) {
+          showDashboard();
+        } else {
+          localStorage.removeItem('ADMIN_PASSWORD');
+          showLogin();
+        }
+      } else {
+        showLogin();
+      }
+    }
+
+    init();
   </script>
+
 </body>
 </html>
