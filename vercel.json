@@ -1,7 +1,9 @@
 {
   "rewrites": [
     { "source": "/app", "destination": "/app.html" },
+    { "source": "/admin", "destination": "/admin.html" },
     { "source": "/api/diagnose", "destination": "/api/diagnose.js" },
-    { "source": "/api/save", "destination": "/api/save.js" }
+    { "source": "/api/save", "destination": "/api/save.js" },
+    { "source": "/api/dashboard", "destination": "/api/dashboard.js" }
   ]
 }
