@@ -5,97 +5,71 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-<title>정책자금 AI 자가진단</title>
+<title>정책자금 AI 무료진단</title>
 <style>
 :root{
-  --bg:#f5f7fb;
+  --bg:#f4f7fb;
   --card:#ffffff;
   --text:#111827;
-  --sub:#6b7280;
-  --muted:#9ca3af;
-  --line:#edf0f4;
+  --sub:#667085;
+  --muted:#98a2b3;
+  --line:#e8edf3;
   --blue:#2563eb;
   --blue2:#1d4ed8;
   --navy:#111c3d;
   --green:#10b981;
   --yellow:#f59e0b;
   --red:#ef4444;
-  --shadow:0 12px 35px rgba(17,24,39,.08);
-  --radius:24px;
+  --shadow:0 18px 45px rgba(17,24,39,.09);
+  --radius:26px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
+html{background:var(--bg);}
 body{
   font-family:'Noto Sans KR',-apple-system,BlinkMacSystemFont,'Malgun Gothic',sans-serif;
-  background:linear-gradient(180deg,#eef4ff 0%,#f7f8fb 32%,#f5f7fb 100%);
+  background:linear-gradient(180deg,#edf5ff 0%,#f7f9fc 34%,#f4f7fb 100%);
   min-height:100vh;
   color:var(--text);
   display:flex;
   justify-content:center;
   padding:18px 14px 44px;
 }
-.app{width:100%;max-width:480px;}
-.top{
-  display:flex;align-items:center;justify-content:space-between;
-  margin:4px 2px 18px;
-}
-.brand{display:flex;align-items:center;gap:10px;}
+.app{width:100%;max-width:500px;}
+.top{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 18px;}
+.brand{display:flex;align-items:center;gap:11px;}
 .logo{
-  width:38px;height:38px;border-radius:14px;
+  width:40px;height:40px;border-radius:15px;
   background:linear-gradient(135deg,var(--blue),#60a5fa);
   color:#fff;display:flex;align-items:center;justify-content:center;
-  font-weight:900;font-size:19px;box-shadow:0 10px 22px rgba(37,99,235,.24);
+  font-weight:900;font-size:20px;box-shadow:0 12px 24px rgba(37,99,235,.25);
 }
 .brand-title{font-size:15px;font-weight:900;letter-spacing:-.3px;}
 .brand-sub{font-size:11px;color:var(--muted);margin-top:1px;}
-.safe-badge{
-  font-size:11px;color:#2563eb;background:#eaf2ff;border:1px solid #d7e7ff;
-  padding:6px 9px;border-radius:999px;font-weight:800;
-}
-.card{
-  background:rgba(255,255,255,.94);
-  border:1px solid rgba(255,255,255,.8);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  overflow:hidden;
-  backdrop-filter:blur(10px);
-}
-.hero{padding:26px 22px 20px;}
-.kicker{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:7px 11px;border-radius:999px;background:#eef6ff;color:#1d4ed8;
-  font-size:12px;font-weight:900;margin-bottom:14px;
-}
+.safe-badge{font-size:11px;color:#2563eb;background:#eaf2ff;border:1px solid #d7e7ff;padding:7px 10px;border-radius:999px;font-weight:900;}
+.card{background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.85);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;backdrop-filter:blur(10px);}
+.hero{padding:28px 22px 20px;}
+.kicker{display:inline-flex;align-items:center;gap:7px;padding:8px 12px;border-radius:999px;background:#eef6ff;color:#1d4ed8;font-size:12px;font-weight:900;margin-bottom:15px;}
 .dot{width:7px;height:7px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 5px rgba(37,99,235,.12);}
-.hero h1{font-size:31px;line-height:1.18;letter-spacing:-1.2px;font-weight:900;margin-bottom:12px;}
+.hero h1{font-size:32px;line-height:1.17;letter-spacing:-1.25px;font-weight:900;margin-bottom:12px;}
 .hero h1 span{color:var(--blue);}
 .hero p{font-size:14px;line-height:1.75;color:var(--sub);font-weight:500;}
-.money-card{
-  margin-top:18px;border-radius:22px;background:linear-gradient(135deg,#101a3a,#1e3a8a 58%,#2563eb);
-  padding:18px;color:#fff;position:relative;overflow:hidden;
-}
-.money-card:before{content:"";position:absolute;width:160px;height:160px;border-radius:50%;right:-60px;top:-70px;background:rgba(255,255,255,.1);}
-.money-card:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:34px;bottom:-45px;background:rgba(255,255,255,.08);}
-.money-label{font-size:12px;color:rgba(255,255,255,.68);font-weight:700;margin-bottom:5px;}
-.money-main{font-size:25px;font-weight:900;letter-spacing:-.8px;}
+.money-card{margin-top:18px;border-radius:24px;background:linear-gradient(135deg,#101a3a,#1e3a8a 58%,#2563eb);padding:18px;color:#fff;position:relative;overflow:hidden;}
+.money-card:before{content:"";position:absolute;width:170px;height:170px;border-radius:50%;right:-65px;top:-76px;background:rgba(255,255,255,.1);}
+.money-card:after{content:"";position:absolute;width:92px;height:92px;border-radius:50%;right:34px;bottom:-48px;background:rgba(255,255,255,.08);}
+.money-label{font-size:12px;color:rgba(255,255,255,.68);font-weight:800;margin-bottom:5px;position:relative;z-index:1;}
+.money-main{font-size:26px;font-weight:900;letter-spacing:-.8px;position:relative;z-index:1;}
 .money-main b{color:#fde68a;}
-.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;}
-.stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:15px;padding:10px 8px;text-align:center;}
+.stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;position:relative;z-index:1;}
+.stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:11px 8px;text-align:center;}
 .stat strong{display:block;font-size:14px;font-weight:900;}
 .stat span{display:block;font-size:10px;color:rgba(255,255,255,.66);margin-top:2px;}
 .section{padding:0 22px 22px;}
-.form-box{background:#f8fafc;border:1px solid #eef2f7;border-radius:22px;padding:16px;margin-top:4px;}
+.form-box{background:#f8fafc;border:1px solid #eef2f7;border-radius:23px;padding:16px;margin-top:4px;}
 .label{font-size:13px;font-weight:900;margin:0 0 8px;display:block;}
-.input{
-  width:100%;height:48px;border:1.5px solid #e5eaf1;border-radius:15px;background:#fff;
-  padding:0 14px;font-size:15px;font-family:inherit;color:var(--text);outline:none;margin-bottom:10px;
-}
+.input{width:100%;height:50px;border:1.5px solid #e5eaf1;border-radius:16px;background:#fff;padding:0 14px;font-size:15px;font-family:inherit;color:var(--text);outline:none;margin-bottom:10px;}
 .input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(37,99,235,.08);}
 .notice{font-size:11px;color:var(--muted);line-height:1.5;margin-top:1px;}
-.primary{
-  width:100%;height:54px;border:none;border-radius:17px;background:var(--blue);color:#fff;
-  font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 14px 24px rgba(37,99,235,.22);
-  transition:.15s ease;margin-top:16px;
-}
+.primary{width:100%;height:56px;border:none;border-radius:18px;background:var(--blue);color:#fff;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 15px 25px rgba(37,99,235,.23);transition:.15s ease;margin-top:16px;}
 .primary:hover{background:var(--blue2);transform:translateY(-1px);}
 .primary:disabled{background:#cbd5e1;box-shadow:none;cursor:not-allowed;transform:none;}
 .progress-wrap{padding:22px 22px 0;}
@@ -106,28 +80,25 @@ body{
 .progress-fill{height:100%;background:linear-gradient(90deg,#2563eb,#60a5fa);border-radius:999px;transition:.25s ease;}
 .qbox{padding:22px;}
 .qtitle{font-size:23px;font-weight:900;line-height:1.35;letter-spacing:-.7px;margin-bottom:17px;}
-.option{
-  width:100%;background:#fff;border:1.5px solid #edf1f7;border-radius:18px;padding:15px 16px;margin-bottom:10px;
-  text-align:left;font-size:15px;font-weight:800;color:#283142;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;
-}
+.option{width:100%;background:#fff;border:1.5px solid #edf1f7;border-radius:18px;padding:15px 16px;margin-bottom:10px;text-align:left;font-size:15px;font-weight:800;color:#283142;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .option:after{content:"";width:20px;height:20px;border-radius:50%;border:2px solid #d8dee8;flex-shrink:0;}
 .option.sel{border-color:#2563eb;background:#f0f6ff;color:#1d4ed8;}
 .option.sel:after{border-color:#2563eb;background:radial-gradient(circle,#2563eb 42%,transparent 45%);}
 .nav{display:flex;gap:10px;margin-top:12px;}
-.back{height:50px;flex:0 0 105px;border:none;background:#eef2f7;color:#64748b;border-radius:16px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;}
-.next{height:50px;flex:1;border:none;background:#111c3d;color:#fff;border-radius:16px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;}
+.back{height:51px;flex:0 0 106px;border:none;background:#eef2f7;color:#64748b;border-radius:17px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;}
+.next{height:51px;flex:1;border:none;background:#111c3d;color:#fff;border-radius:17px;font-size:15px;font-weight:900;font-family:inherit;cursor:pointer;}
 .next:disabled{background:#cbd5e1;cursor:not-allowed;}
-.loading{padding:48px 24px;text-align:center;}
-.spinner{width:48px;height:48px;border-radius:50%;border:4px solid #e5eaf1;border-top-color:#2563eb;animation:spin .8s linear infinite;margin:0 auto 18px;}
+.loading{padding:50px 24px;text-align:center;}
+.spinner{width:50px;height:50px;border-radius:50%;border:4px solid #e5eaf1;border-top-color:#2563eb;animation:spin .8s linear infinite;margin:0 auto 18px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading h2{font-size:20px;font-weight:900;margin-bottom:8px;}
 .loading p{font-size:13px;color:var(--sub);line-height:1.7;}
 .result{padding:22px;}
-.score-card{border-radius:24px;background:linear-gradient(135deg,#111c3d,#1d4ed8);color:#fff;padding:22px;margin-bottom:18px;position:relative;overflow:hidden;}
-.score-card:before{content:"";position:absolute;right:-45px;top:-45px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.1);}
+.score-card{border-radius:25px;background:linear-gradient(135deg,#111c3d,#1d4ed8);color:#fff;padding:22px;margin-bottom:18px;position:relative;overflow:hidden;}
+.score-card:before{content:"";position:absolute;right:-45px;top:-45px;width:135px;height:135px;border-radius:50%;background:rgba(255,255,255,.1);}
 .score-row{display:flex;align-items:center;gap:16px;position:relative;z-index:1;}
-.score-circle{width:92px;height:92px;border-radius:50%;background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.score-num{font-size:32px;font-weight:900;line-height:1;}
+.score-circle{width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.22);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-num{font-size:33px;font-weight:900;line-height:1;}
 .score-pt{font-size:11px;color:rgba(255,255,255,.7);font-weight:900;margin-top:3px;}
 .score-info h2{font-size:19px;font-weight:900;margin-bottom:6px;line-height:1.35;}
 .score-info p{font-size:12px;color:rgba(255,255,255,.72);line-height:1.55;}
@@ -171,11 +142,11 @@ body{
     <section id="intro">
       <div class="hero">
         <div class="kicker"><span class="dot"></span>사업자 맞춤 정책자금 매칭</div>
-        <h1>내 사업에 맞는<br><span>정책자금 가능성</span>을<br>30초 만에 확인하세요</h1>
+        <h1>최대 3억 정책자금<br><span>AI 승인 가능성</span>을<br>30초 만에 확인하세요</h1>
         <p>업종, 매출, 자금 목적을 입력하면 AI가 소진공·신보·기보·중진공 등 주요 정책자금 가능성을 분석합니다.</p>
         <div class="money-card">
-          <div class="money-label">AI 추천 분석</div>
-          <div class="money-main">지원 가능 자금과 <b>준비서류</b>까지</div>
+          <div class="money-label">AI 무료 분석</div>
+          <div class="money-main">가능 자금과 <b>준비서류</b>까지</div>
           <div class="stat-row">
             <div class="stat"><strong>무료</strong><span>진단비용</span></div>
             <div class="stat"><strong>30초</strong><span>예상시간</span></div>
@@ -265,7 +236,6 @@ let loadTimer;
 
 function el(id){ return document.getElementById(id); }
 function show(id){ ['intro','survey','loading','result','error'].forEach(s=>el(s).classList.add('hidden')); el(id).classList.remove('hidden'); window.scrollTo(0,0); }
-
 function phoneOk(v){ return /^01[016789]-?\d{3,4}-?\d{4}$/.test(v.trim()); }
 
 function startSurvey(){
