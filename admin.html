@@ -1,144 +1,263 @@
-<script>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>정책자금 관리자</title>
 
-async function loadData() {
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
 
-  try {
-
-    const res =
-      await fetch('/api/dashboard?time=' + Date.now());
-
-    const data =
-      await res.json();
-
-    console.log('dashboard data:', data);
-
-    const list =
-      data.customers ||
-      data.recentCustomers ||
-      data.data ||
-      [];
-
-    document.getElementById('total').innerText =
-      data.total ||
-      data.totalCustomers ||
-      list.length ||
-      0;
-
-    document.getElementById('today').innerText =
-      data.today ||
-      data.todayCount ||
-      0;
-
-    document.getElementById('high').innerText =
-      data.high ||
-      data.highScoreCount ||
-      0;
-
-    document.getElementById('duplicate').innerText =
-      data.duplicate ||
-      0;
-
-    const tbody =
-      document.getElementById('tbody');
-
-    tbody.innerHTML = '';
-
-    if (!list.length) {
-
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="6"
-            style="
-              text-align:center;
-              padding:40px;
-              color:#666;
-            ">
-            고객 데이터가 없습니다.
-          </td>
-        </tr>
-      `;
-
-      return;
+    body {
+      font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+      background:#f5f7fb;
+      color:#111;
+      padding:30px;
     }
 
-    list.forEach(item => {
+    .wrap { max-width:1200px; margin:auto; }
 
-      const score =
-        Number(item.score || 0);
+    .top {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+    }
 
-      let status =
-        '<span class="badge normal">일반</span>';
+    h1 { font-size:38px; margin-bottom:10px; }
+    .sub { color:#666; }
 
-      if (item.isDuplicate) {
+    .reload {
+      background:#111827;
+      color:white;
+      border:none;
+      padding:14px 22px;
+      border-radius:16px;
+      cursor:pointer;
+      font-weight:bold;
+      font-size:15px;
+    }
 
-        status =
-          '<span class="badge dup">중복</span>';
+    .cards {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:16px;
+      margin-bottom:24px;
+    }
 
-      } else if (score >= 70) {
+    .card {
+      background:white;
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.06);
+    }
 
-        status =
-          '<span class="badge hot">고확률</span>';
+    .card-title {
+      color:#666;
+      font-size:14px;
+      margin-bottom:10px;
+    }
+
+    .card-value {
+      font-size:34px;
+      font-weight:800;
+    }
+
+    .panel {
+      background:white;
+      border-radius:24px;
+      padding:24px;
+      box-shadow:0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    table {
+      width:100%;
+      border-collapse:collapse;
+      margin-top:20px;
+    }
+
+    th {
+      text-align:left;
+      padding:14px;
+      border-bottom:1px solid #eee;
+      color:#666;
+      font-size:13px;
+    }
+
+    td {
+      padding:16px 14px;
+      border-bottom:1px solid #f3f3f3;
+      font-size:14px;
+    }
+
+    .badge {
+      display:inline-block;
+      padding:7px 12px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:bold;
+    }
+
+    .high { background:#111827; color:white; }
+    .normal { background:#e5e7eb; color:#333; }
+    .hot { background:#FEF3C7; color:#92400E; }
+    .dup { background:#FEE2E2; color:#991B1B; }
+
+    @media(max-width:900px){
+      .cards { grid-template-columns:1fr 1fr; }
+    }
+
+    @media(max-width:600px){
+      .cards { grid-template-columns:1fr; }
+      .top { flex-direction:column; align-items:flex-start; gap:20px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <div class="top">
+      <div>
+        <h1>정책자금 CRM</h1>
+        <div class="sub">최근 고객 · 고확률 고객 · 중복 신청 관리</div>
+      </div>
+
+      <button class="reload" onclick="loadData()">새로고침</button>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-title">전체 신청</div>
+        <div class="card-value" id="total">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">오늘 신청</div>
+        <div class="card-value" id="today">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">70점 이상</div>
+        <div class="card-value" id="high">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">중복 고객</div>
+        <div class="card-value" id="duplicate">0</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>최근 고객 리스트</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>이름</th>
+            <th>전화번호</th>
+            <th>업종</th>
+            <th>점수</th>
+            <th>상태</th>
+            <th>신청일</th>
+          </tr>
+        </thead>
+
+        <tbody id="tbody">
+          <tr>
+            <td colspan="6" style="text-align:center; padding:40px; color:#777;">
+              불러오는 중...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    function setText(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.innerText = value;
+    }
+
+    async function loadData() {
+      try {
+        const res = await fetch('/api/dashboard?time=' + Date.now());
+        const data = await res.json();
+
+        const list =
+          data.customers ||
+          data.recentCustomers ||
+          data.data ||
+          [];
+
+        setText('total', data.total || data.totalCustomers || list.length || 0);
+        setText('today', data.today || data.todayCount || 0);
+        setText('high', data.high || data.highScoreCount || 0);
+        setText('duplicate', data.duplicate || 0);
+
+        const tbody = document.getElementById('tbody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+
+        if (!list.length) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align:center; padding:40px; color:#777;">
+                고객 데이터가 없습니다.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        list.forEach(item => {
+          const score = Number(item.score || 0);
+
+          let status = '<span class="badge normal">일반</span>';
+
+          if (item.isDuplicate) {
+            status = '<span class="badge dup">중복</span>';
+          } else if (score >= 70) {
+            status = '<span class="badge hot">고확률</span>';
+          }
+
+          tbody.innerHTML += `
+            <tr>
+              <td>${item.name || '-'}</td>
+              <td>${item.phone || '-'}</td>
+              <td>${item.business || item.q1 || '-'}</td>
+              <td>
+                <span class="badge ${score >= 70 ? 'high' : 'normal'}">
+                  ${score}점
+                </span>
+              </td>
+              <td>${status}</td>
+              <td>${formatDate(item.createdAt)}</td>
+            </tr>
+          `;
+        });
+
+      } catch (err) {
+        console.error(err);
+        alert('대시보드 로딩 실패: ' + err.message);
       }
+    }
 
-      tbody.innerHTML += `
-        <tr>
+    function formatDate(value) {
+      if (!value) return '-';
 
-          <td>
-            ${item.name || '-'}
-          </td>
+      try {
+        const date = new Date(value);
+        return date.toLocaleString('ko-KR');
+      } catch (e) {
+        return value;
+      }
+    }
 
-          <td>
-            ${item.phone || '-'}
-          </td>
-
-          <td>
-            ${item.business || item.q1 || '-'}
-          </td>
-
-          <td>
-            <span class="badge ${score >= 70 ? 'high' : 'normal'}">
-              ${score}점
-            </span>
-          </td>
-
-          <td>
-            ${status}
-          </td>
-
-          <td>
-            ${formatDate(item.createdAt)}
-          </td>
-
-        </tr>
-      `;
-    });
-
-  } catch (err) {
-
-    console.error(err);
-
-    alert(
-      '대시보드 로딩 실패: ' + err.message
-    );
-  }
-}
-
-function formatDate(value) {
-
-  if (!value) return '-';
-
-  try {
-
-    const date = new Date(value);
-
-    return date.toLocaleString('ko-KR');
-
-  } catch (e) {
-
-    return value;
-  }
-}
-
-loadData();
-
-</script>
+    loadData();
+  </script>
+</body>
+</html>
